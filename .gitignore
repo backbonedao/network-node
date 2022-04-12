@@ -63,3 +63,6 @@ typings/
 # UUUUGH
 
 package-lock.json
+
+letsencrypt.d
+greenlock.d

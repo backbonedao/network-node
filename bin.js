@@ -8,7 +8,7 @@ const path = require('path')
 
 const argv = require('minimist')(process.argv.slice(2))
 
-const DEFAULT_PORT = 4977 // HYPR on a cellphone keypad
+const DEFAULT_PORT = 4977
 
 const INDEX_HTML_LOCATION = path.join(__dirname, 'index.html')
 

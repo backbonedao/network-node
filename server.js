@@ -1,33 +1,44 @@
+#!/usr/bin/env node
 
-const HyperswarmProxyWSServer = require('hyperswarm-proxy-ws/server')
-const { SignalServer } = require('@geut/discovery-swarm-webrtc/server')
-const websocket = require('websocket-stream')
+const HyperswarmServer = require("./server-swarm")
+const send = require("send")
+const path = require("path")
 
-const url = require('url')
+const maintainerEmail = process.env["EMAIL"]
+if (!maintainerEmail) throw new Error("LETSENCRYPT REQUIRES EMAIL")
 
-class HyperswarmServer extends HyperswarmProxyWSServer {
-  listenOnServer (server) {
-    this.server = server
+const wss_port = parseInt(process.env['PORT'], 10) || 4977
+const https_port = parseInt(process.env['HTTPS_PORT'], 10) || 443
+const http_port = parseInt(process.env['HTTP_PORT'], 10) || 80
 
-    const proxyWss = this.websocketServer = websocket.createServer({ noServer: true }, (socket) => {
-      this.handleStream(socket)
-    })
+require("greenlock-express")
+  .init({
+    packageRoot: __dirname,
+    configDir: "./letsencrypt.d",
+    maintainerEmail,
+    cluster: false,
+  })
+  .ready(httpsWorker)
 
-    const signalServer = new SignalServer({ noServer: true })
-    const signalWss = signalServer.ws
+function httpsWorker(glx) {
+  var httpsServer = glx.httpsServer(null, function (req, res) {
+    res.end("Hello, Encrypted World!")
+  })
 
-    server.on('upgrade', function upgrade(request, socket, head) {
-      const pathname = url.parse(request.url).pathname;
+  const wsServer = new HyperswarmServer()
+  wsServer.listenOnServer(httpsServer)
+  
+  httpsServer.listen(wss_port, "0.0.0.0", function () {
+    console.info("Listening on ", httpsServer.address())
+  })
+  
+  var httpServer = glx.httpServer()
 
-      if (pathname === '/signal') {
-        signalWss.handleUpgrade(request, socket, head, (ws) => signalWss.emit('connection', ws, request));
-        return
-      }
+  httpServer.listen(http_port, "0.0.0.0", function () {
+    console.info("Listening on ", httpServer.address())
+  })
 
-      // proxy
-      proxyWss.handleUpgrade(request, socket, head, (ws) => proxyWss.emit('connection', ws, request));
-    });
-  }
+  console.log(`Listening on ws://localhost:${wss_port}`)
+  console.log(`-> Proxy available on ws://localhost:${wss_port}/proxy`)
+  console.log(`-> Signal available on ws://localhost:${wss_port}/signal`)
 }
-
-module.exports = HyperswarmServer

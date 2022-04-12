@@ -20,7 +20,7 @@ test('Connect to local hyperswarm through local proxy', async (t) => {
   t.plan(6)
   try {
     // Initialize local hyperswarm instance, listen for peers
-    const swarm = hyperswarm()
+    const swarm = new hyperswarm()
 
     // Initialize client
     const hostname = `ws://localhost:${port}`

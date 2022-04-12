@@ -1,17 +1,17 @@
 {
-  "name": "hyperswarm-web",
+  "name": "@backbonedao/swarm-webrtc",
   "version": "2.2.0",
-  "description": "Implementation of the hyperswarm API for use in web browsers",
+  "description": "core/swarm-webrtc",
   "main": "index.js",
   "scripts": {
     "test": "node test"
   },
   "bin": {
-    "hyperswarm-web": "bin.js"
+    "swarm-webrtc": "bin.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RangerMauve/hyperswarm-web.git"
+    "url": "git+https://github.com/backbonedao/swarm-webrtc.git"
   },
   "keywords": [
     "hyperswarm",
@@ -20,15 +20,25 @@
     "browser",
     "webrtc"
   ],
-  "author": "rangermauve",
-  "license": "MIT",
+  "contributors": [
+    {
+      "name": "backbone://dao",
+      "email": "team@backbonedao.com",
+      "url": "https://backbonedao.com"
+    },
+    {
+      "name": "rangermauve"
+    }
+  ],
+  "license": "AGPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/RangerMauve/hyperswarm-web/issues"
+    "url": "https://github.com/backbonedao/swarm-webrtc/issues"
   },
-  "homepage": "https://github.com/RangerMauve/hyperswarm-web#readme",
+  "homepage": "https://github.com/backbonedao/swarm-webrtc#readme",
   "dependencies": {
     "@geut/discovery-swarm-webrtc": "^4.0.1",
     "duplexpair": "^1.0.1",
+    "greenlock-express": "^4.0.3",
     "hyperswarm-proxy-ws": "^1.2.0",
     "minimist": "^1.2.0",
     "send": "^0.17.1",
