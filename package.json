@@ -1,17 +1,20 @@
 {
-  "name": "@backbonedao/swarm-webrtc",
+  "name": "@backbonedao/network-node",
   "version": "2.2.0",
-  "description": "core/swarm-webrtc",
-  "main": "index.js",
+  "description": "core/network-node",
+  "main": "src/server.js",
   "scripts": {
-    "test": "node test"
+    "test": "node test",
+    "build-docker": "docker build -t ghcr.io/backbonedao/network-node .",
+    "setup": "greenlock defaults --agree-to-terms && greenlock init --maintainer-email ${npm_config_email} && greenlock add --subject ${npm_config_domain} --altnames ${npm_config_domain} && echo '>> Backbone node setup completed'",
+    "push-docker": "docker push ghcr.io/backbonedao/network-node"
   },
   "bin": {
-    "swarm-webrtc": "bin.js"
+    "backbone-node": "src/server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/backbonedao/swarm-webrtc.git"
+    "url": "git+https://github.com/backbonedao/network-node.git"
   },
   "keywords": [
     "hyperswarm",
@@ -32,12 +35,14 @@
   ],
   "license": "AGPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/backbonedao/swarm-webrtc/issues"
+    "url": "https://github.com/backbonedao/network-node/issues"
   },
-  "homepage": "https://github.com/backbonedao/swarm-webrtc#readme",
+  "homepage": "https://github.com/backbonedao/network-node#readme",
   "dependencies": {
     "@geut/discovery-swarm-webrtc": "^4.0.1",
+    "@greenlock/manager": "^3.1.0",
     "duplexpair": "^1.0.1",
+    "greenlock": "^4.0.4",
     "greenlock-express": "^4.0.3",
     "hyperswarm-proxy-ws": "^1.2.0",
     "minimist": "^1.2.0",

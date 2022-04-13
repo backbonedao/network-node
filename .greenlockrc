@@ -1,1 +1,1 @@
-{"manager":{"module":"@greenlock/manager"},"configDir":"./letsencrypt.d"}
+{"manager":{"module":"@greenlock/manager"},"configDir":"./certs"}

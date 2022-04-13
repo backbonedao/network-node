@@ -64,5 +64,4 @@ typings/
 
 package-lock.json
 
-letsencrypt.d
-greenlock.d
+*certs
