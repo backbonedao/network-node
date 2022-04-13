@@ -9,4 +9,4 @@ COPY .greenlockrc /app
 RUN npm link
 EXPOSE 80
 EXPOSE 1337
-CMD node /app/server.js --staging
+CMD node /app/server.js
