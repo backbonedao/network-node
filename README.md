@@ -1,7 +1,5 @@
 # Network Node
 
-*This repository is meant only as a dependency for Backbone*
-
 ## Setup
 
 Network node requires SSL certificates for WSS connections. We have built-in generation of free letsencrypt.org certificates and they are renewed automatically, but you need to set it up.
