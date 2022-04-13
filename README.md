@@ -10,12 +10,12 @@ Network node requires SSL certificates for WSS connections. We have built-in gen
 
 **Docker**
 ```bash
-docker run -p 80:80 -p 1337:1337 -v ${HOME}/.backbone/certs:/app/certs -it ghcr.io/backbonedao/network-node npm run setup --email=your@email.com --domain=signalling.yourdomain.com
+docker run -v ${HOME}/.backbone/certs:/app/certs -it ghcr.io/backbonedao/network-node npm run setup --email=your@email.com --domain=node.yourdomain.com
 ```
 
 **Cloned repo**
 ```bash
-npm run setup --email=your@email.com --domain=signalling.yourdomain.com
+npm run setup --email=your@email.com --domain=node.yourdomain.com
 ```
 
 ### SSL certificates storage
