@@ -1,5 +1,5 @@
 const hyperswarm = require('hyperswarm')
-const HyperswarmServer = require('./server')
+const HyperswarmServer = require('./server-swarm')
 const hyperswarmweb = require('./')
 const test = require('tape')
 const getPort = require('get-port')
@@ -20,7 +20,7 @@ test('Connect to local hyperswarm through local proxy', async (t) => {
   t.plan(6)
   try {
     // Initialize local hyperswarm instance, listen for peers
-    const swarm = new hyperswarm()
+    const swarm = hyperswarm()
 
     // Initialize client
     const hostname = `ws://localhost:${port}`
