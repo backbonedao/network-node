@@ -65,3 +65,5 @@ typings/
 package-lock.json
 
 *certs
+
+demo.build.js

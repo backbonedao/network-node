@@ -1,6 +1,6 @@
 const hyperswarm = require('hyperswarm')
-const HyperswarmServer = require('./server-swarm')
-const hyperswarmweb = require('./')
+const HyperswarmServer = require('../server-swarm')
+const hyperswarmweb = require('..')
 const test = require('tape')
 const getPort = require('get-port')
 const crypto = require('crypto')
@@ -8,11 +8,15 @@ const wrtc = require('wrtc')
 
 let server = null
 let port = null
+let hostname = ''
 test('Setup', async function (t) {
   // Initialize local proxy
   server = new HyperswarmServer()
   port = await getPort()
   server.listen(port)
+  hostname = `ws://localhost:${port}`
+  // hostname = `wss://node1.network.backbonedao.com:1337`
+  // hostname = 'wss://hyperswarm.mauve.moe'
   t.end()
 });
 
@@ -23,11 +27,9 @@ test('Connect to local hyperswarm through local proxy', async (t) => {
     const swarm = hyperswarm()
 
     // Initialize client
-    const hostname = `ws://localhost:${port}`
     const client = hyperswarmweb({
       bootstrap: [hostname]
     })
-
     // Test connections in regular hyperswarm
     swarm.once('connection', (connection, info) => {
       t.pass('Got connection locally')
@@ -69,13 +71,13 @@ test('Connect to local hyperswarm through local proxy', async (t) => {
     const key = crypto.randomBytes(32)
 
     // Join channel on local hyperswarm
-    swarm.join(key, {
+    await swarm.join(key, {
       announce: true,
       lookup: true
     })
 
     // Join channel on client
-    client.join(key)
+    await client.join(key)
   } catch (e) {
     console.error(e)
     t.fail(e)
@@ -86,7 +88,6 @@ test('Connect to webrtc peers', async (t) => {
   t.plan(8)
   try {
     // Initialize client
-    const hostname = `ws://localhost:${port}`
     const client1 = hyperswarmweb({
       bootstrap: [hostname],
       simplePeer: {
