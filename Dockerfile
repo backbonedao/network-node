@@ -6,6 +6,7 @@ COPY package.json /app
 RUN npm i
 COPY . /app
 COPY .greenlockrc /app
+RUN npx patch-package
 RUN npm link
 EXPOSE 80
 EXPOSE 1337
