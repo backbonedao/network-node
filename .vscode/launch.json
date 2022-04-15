@@ -7,14 +7,19 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
+      "name": "Run tests",
+      "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/node_modules/.bin/tape",
-      "args": [
-        "${workspaceFolder}/test/test.js"
-      ]
+      "args": ["${workspaceFolder}/test/test.js"],
+      "env": { "DEBUG": "*"}
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run server",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/server.js",
+      "env": { "DEBUG": "true", "HTTP_PORT": "1234" }
     }
   ]
 }

@@ -15,6 +15,7 @@ test('Setup', async function (t) {
   port = await getPort()
   server.listen(port)
   hostname = `ws://localhost:${port}`
+  // hostname = `ws://127.0.0.1:1234`
   // hostname = `wss://node1.network.backbonedao.com:1337`
   // hostname = 'wss://hyperswarm.mauve.moe'
   t.end()

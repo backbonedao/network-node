@@ -7,7 +7,8 @@
     "build-docker": "docker build -t ghcr.io/backbonedao/network-node .",
     "setup": "greenlock defaults --agree-to-terms && greenlock init --maintainer-email ${npm_config_email} && greenlock add --subject ${npm_config_domain} --altnames ${npm_config_domain} && echo '>> Backbone node setup completed'",
     "push-docker": "docker push ghcr.io/backbonedao/network-node",
-    "build-demo": "browserify --debug demo.js > test/demo.build.js"
+    "build-demo": "browserify --debug demo.js > test/demo.build.js",
+    "postinstall": "patch-package"
   },
   "bin": {
     "backbone-node": "src/server.js"
@@ -44,8 +45,10 @@
     "duplexpair": "^1.0.1",
     "greenlock": "^4.0.4",
     "greenlock-express": "^4.0.3",
+    "hyperswarm-proxy": "^1.5.2",
     "hyperswarm-proxy-ws": "^1.2.0",
     "minimist": "^1.2.6",
+    "patch-package": "^6.4.7",
     "send": "^0.18.0",
     "websocket-stream": "^5.5.2"
   },

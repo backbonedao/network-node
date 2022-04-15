@@ -1,0 +1,14 @@
+diff --git a/node_modules/hyperswarm-proxy/messages.js b/node_modules/hyperswarm-proxy/messages.js
+index e6081dd..6d48d18 100644
+--- a/node_modules/hyperswarm-proxy/messages.js
++++ b/node_modules/hyperswarm-proxy/messages.js
+@@ -19,7 +19,8 @@ exports.EventType = {
+   ON_STREAM_DATA: 6,
+   ON_STREAM_ERROR: 7,
+   ON_PEER: 8,
+-  CONNECT: 9
++  CONNECT: 9,
++  ON_UPDATED: 10
+ }
+ 
+ var SwarmEvent = exports.SwarmEvent = {
