@@ -40,6 +40,7 @@
   },
   "homepage": "https://github.com/backbonedao/network-node#readme",
   "dependencies": {
+    "@hyperswarm/dht": "github:backbonedao/dht",
     "@geut/discovery-swarm-webrtc": "^4.3.1",
     "@greenlock/manager": "^3.1.0",
     "duplexpair": "^1.0.1",
