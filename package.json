@@ -11,7 +11,7 @@
     "postinstall": "patch-package"
   },
   "bin": {
-    "backbone-node": "src/server.js"
+    "backbone-node": "server.js"
   },
   "repository": {
     "type": "git",
