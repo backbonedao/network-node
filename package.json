@@ -40,9 +40,9 @@
   },
   "homepage": "https://github.com/backbonedao/network-node#readme",
   "dependencies": {
-    "@hyperswarm/dht": "github:backbonedao/dht",
     "@geut/discovery-swarm-webrtc": "^4.3.1",
     "@greenlock/manager": "^3.1.0",
+    "@hyperswarm/dht": "github:backbonedao/dht",
     "duplexpair": "^1.0.1",
     "greenlock": "^4.0.4",
     "greenlock-express": "^4.0.3",
@@ -58,7 +58,6 @@
     "hyperswarm": "^2.15.3",
     "node-gyp": "^9.0.0",
     "node-pre-gyp": "^0.17.0",
-    "tape": "^4.12.1",
-    "wrtc": "^0.4.7"
+    "tape": "^4.12.1"
   }
 }
