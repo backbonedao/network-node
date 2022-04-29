@@ -10,4 +10,6 @@ RUN npx patch-package
 RUN npm link
 EXPOSE 80
 EXPOSE 1337
+EXPOSE 19302
+EXPOSE 3478
 CMD node /app/server.js
