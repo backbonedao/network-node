@@ -23,7 +23,7 @@ The above command creates `~/.backbone/certs` directory and all letsencrypt rela
 
 **Docker**
 ```bash
-docker run -p 80:80 -p 1337:1337 --restart=unless-stopped -v ${HOME}/.backbone/certs:/app/certs -dt ghcr.io/backbonedao/network-node
+docker run -p 80:80 -p 1337:1337 -p 19302:19302 -p 3478:3478 --restart=unless-stopped -v ${HOME}/.backbone/certs:/app/certs -dt ghcr.io/backbonedao/network-node
 ```
 
 **Cloned repo**
