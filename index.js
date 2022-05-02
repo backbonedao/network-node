@@ -1,18 +1,18 @@
-const { EventEmitter } = require('events')
-const webRTCSwarm = require('@geut/discovery-swarm-webrtc')
-const HyperswarmClient = require('hyperswarm-proxy-ws/client')
-const DuplexPair = require('duplexpair')
+const { EventEmitter } = require("events")
+const webRTCSwarm = require("@geut/discovery-swarm-webrtc")
+const HyperswarmClient = require("hyperswarm-proxy-ws/client")
+const DuplexPair = require("duplexpair")
+const wrtc = require("wrtc")
+const DEFAULT_WEBRTC_BOOTSTRAP = ["wss://node1.network.backbonedao.com:1337"]
+const DEFAULT_PROXY_SERVER = "wss://node1.network.backbonedao.com:1337"
 
-const DEFAULT_WEBRTC_BOOTSTRAP = ['wss://node1.network.backbonedao.com:1337']
-const DEFAULT_PROXY_SERVER = 'wss://node1.network.backbonedao.com:1337'
-
-module.exports = function swarm (opts) {
+module.exports = function swarm(opts) {
   return new HyperswarmWeb(opts)
 }
 
 function getBootstrapUrls(path, defaultUrls = [], specificUrls = []) {
-  let urls = defaultUrls.map(url => {
-    if (url.endsWith('/')) {
+  let urls = defaultUrls.map((url) => {
+    if (url.endsWith("/")) {
       url = url.slice(0, -1)
     }
 
@@ -25,41 +25,46 @@ function getBootstrapUrls(path, defaultUrls = [], specificUrls = []) {
   return urls
 }
 
-function webrtcPeerInfo (info) {
+function webrtcPeerInfo(info) {
   const { id, channel, initiator } = info
   return {
-    type: 'webrtc',
+    type: "webrtc",
     client: initiator,
     peer: {
       port: 0,
       host: id,
-      topic: channel
+      topic: channel,
     },
     // TODO: Add deduplication to WebRTC logic
-    deduplicate: () => false
+    deduplicate: () => false,
   }
 }
 
 class HyperswarmWeb extends EventEmitter {
-  constructor (opts = {}) {
+  constructor(opts = {}) {
     super()
-    const {
+    let {
       bootstrap,
       webrtcBootstrap,
       wsProxy,
       maxPeers,
       simplePeer,
-      wsReconnectDelay
+      wsReconnectDelay,
     } = opts
+
+    simplePeer = { ...simplePeer, wrtc }
 
     this.webrtcOpts = {
       maxPeers,
       simplePeer,
-      bootstrap: getBootstrapUrls('signal', bootstrap, webrtcBootstrap) || DEFAULT_WEBRTC_BOOTSTRAP
+      bootstrap:
+        getBootstrapUrls("signal", bootstrap, webrtcBootstrap) ||
+        DEFAULT_WEBRTC_BOOTSTRAP,
     }
     this.wsOpts = {
       maxPeers,
-      proxy: getBootstrapUrls('proxy', bootstrap, wsProxy) || DEFAULT_PROXY_SERVER
+      proxy:
+        getBootstrapUrls("proxy", bootstrap, wsProxy) || DEFAULT_PROXY_SERVER,
     }
 
     if (wsReconnectDelay) {
@@ -71,83 +76,91 @@ class HyperswarmWeb extends EventEmitter {
     this._peers = new Map()
   }
 
-  _handleConnection (connection, info) {
+  _handleConnection(connection, info) {
     this._peers.set(info.peer.host, { connection, info })
-    this.emit('connection', connection, info)
+    this.emit("connection", connection, info)
   }
 
-  _handleDisconnection (connection, info) {
+  _handleDisconnection(connection, info) {
     this._peers.delete(info.peer.host)
-    this.emit('disconnection', connection, info)
+    this.emit("disconnection", connection, info)
   }
 
-  get peers () {
+  get peers() {
     return Array.from(this._peers.values())
   }
 
-  address () {
+  address() {
     // TODO: What could possibly go here?!?!?!
-    return { port: 0, family: 'IPv4', address: '127.0.0.1' }
+    return { port: 0, family: "IPv4", address: "127.0.0.1" }
   }
 
-  listen (port, cb) {
+  listen(port, cb) {
     if (this.isListening) return setTimeout(cb, 0)
 
     this.isListening = true
 
     this.webrtc = webRTCSwarm(this.webrtcOpts)
-    this.webrtc.on('connection', (connection, info) => this._handleConnection(connection, webrtcPeerInfo(info)))
-    this.webrtc.on('connection-closed', (connection, info) => this._handleDisconnection(connection, webrtcPeerInfo(info)))
+    this.webrtc.on("connection", (connection, info) =>
+      this._handleConnection(connection, webrtcPeerInfo(info))
+    )
+    this.webrtc.on("connection-closed", (connection, info) =>
+      this._handleDisconnection(connection, webrtcPeerInfo(info))
+    )
 
     this.ws = new HyperswarmClient(this.wsOpts)
-    this.ws.on('connection', (connection, info) => this._handleConnection(connection, info))
-    this.ws.on('disconnection', (connection, info) => this._handleDisconnection(connection, info))
+    this.ws.on("connection", (connection, info) =>
+      this._handleConnection(connection, info)
+    )
+    this.ws.on("disconnection", (connection, info) =>
+      this._handleDisconnection(connection, info)
+    )
   }
 
-  join (key, opts) {
+  join(key, opts) {
     this.listen()
 
     this.webrtc.join(key)
     this.ws.join(key, opts)
   }
 
-  leave (key) {
+  leave(key) {
     this.listen()
 
     this.webrtc.leave(key)
     this.ws.leave(key)
   }
 
-  connect (peer, cb) {
+  connect(peer, cb) {
     this.listen()
 
     this.ws.connect(peer, cb)
   }
 
-  connectivity (cb) {
+  connectivity(cb) {
     this.listen(() => {
       cb(null, {
         bound: true,
         bootstrapped: true,
-        holepunched: true
+        holepunched: true,
       })
     })
   }
 
   // No clue how to implement this, it's undocumented
-  flush (cb) {
+  flush(cb) {
     process.nextTick(cb)
   }
 
   // Always return that we're looking up and not announcing
-  status () {
+  status() {
     return {
       lookup: true,
-      announce: false
+      announce: false,
     }
   }
 
-  destroy (cb) {
+  destroy(cb) {
     this.destroyed = true
     this.webrtc.close(() => {
       this.ws.destroy(cb)
